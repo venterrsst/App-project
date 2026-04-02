@@ -1,4 +1,5 @@
 from tkinter import *
+from pygame import mixer
 import game_crocodile as game
 root = Tk()
 window2 = None
@@ -9,18 +10,41 @@ attempts = None
 button_repeat = None
 WIDTH_BUTTON = 20
 HEIGHT_BUTTON = 5
+mixer.init()
+music_menu = "music_menu.mp3"
+music_game = "music_game.mp3"
 
 game.start()
 the_word = game.key
 
+def play_menu():
+    try:
+        mixer.music.load(music_menu)
+        mixer.music.play(-1)
+    except:
+        pass
+
+def stop_music():
+    mixer.music.stop()
+
+def play_music_game():
+    try:
+        mixer.music.load(music_game)
+        mixer.music.play(-1)
+    except:
+        pass
+
 def close_window(event):
+    stop_music()
     game.log("Пользователь вышел из игры")
     root.destroy()
 
 def back_to_main_window(event):
     global window2
+    stop_music()
     window2.destroy()
     root.deiconify()
+    play_menu()
 
 def back_to_main_window2(event):
     global window3
@@ -37,6 +61,8 @@ def repeat_game(event):
     button_repeat.place_forget()
 
 def open_window(event):
+    stop_music()
+    play_music_game()
     root.withdraw()
     global window2, entry, hints, button_repeat, attempts
     game.log("Пользователь начал игру")
@@ -122,4 +148,5 @@ button1.place(relx=0.5, rely=0.5, anchor="center")
 button5.place(relx=0.5, rely=0.6, anchor="center")
 button2.place(relx=0.5, rely=0.7, anchor="center")
 canvas.place(x=0, y=0)
+play_menu()
 root.mainloop()
